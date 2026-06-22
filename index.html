@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>小梦忆</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #fff;
+      color: #1a1a1a;
+      font-family: 'Noto Serif SC', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      overflow: hidden;
+    }
+
+    .star-btn {
+      position: fixed;
+      font-size: 1.4rem;
+      text-decoration: none;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.3s;
+      z-index: 0;
+      user-select: none;
+      padding: 10px; /* 增大手机点击区域 */
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .star-btn:hover { color: #999; }
+
+    .wrapper {
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .entries {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .entry { border-bottom: 1px solid #e8e8e8; }
+
+    .entry-header {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 20px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      color: #1a1a1a;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .entry-header .arrow {
+      font-size: 0.7rem;
+      transition: transform 0.3s;
+      opacity: 0.35;
+    }
+
+    .entry-header.open .arrow { transform: rotate(180deg); }
+
+    .entry-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s;
+      padding: 0 4px;
+    }
+
+    .entry-body.open {
+      max-height: 200px;
+      padding: 4px 4px 28px;
+    }
+
+    .entry-body p {
+      font-size: 1rem;
+      line-height: 2.2;
+      color: #444;
+      letter-spacing: 0.08em;
+    }
+
+    /* 手机适配 */
+    @media (max-width: 480px) {
+      .wrapper {
+        max-width: 100%;
+      }
+      .entry-header {
+        font-size: 0.95rem;
+        padding: 22px 4px;
+      }
+      .entry-body p {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="star-btn" id="star" href="https://www.xiaohongshu.com/user/profile/5a707d824eacab756f6c2b60?xsec_token=ABTFMoUYKk2Q5Qf4rPhY6eIDef70tkRpvqAHMqnwUThpQ=&xsec_source=pc_note" target="_blank">☆</a>
+
+  <div class="wrapper">
+    <div class="entries">
+
+      <div class="entry">
+        <button class="entry-header" onclick="toggle(this)">
+          <span>2025.05.01</span>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="entry-body">
+          <p>happy bday</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <button class="entry-header" onclick="toggle(this)">
+          <span>2024.06.22</span>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="entry-body">
+          <p>Here, always.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function toggle(btn) {
+      btn.classList.toggle('open');
+      btn.nextElementSibling.classList.toggle('open');
+    }
+
+    // 星星漫游 — 始终在内容后面飘 (z-index:0)
+    const star = document.getElementById('star');
+    let x = Math.random() * (window.innerWidth - 40);
+    let y = Math.random() * (window.innerHeight - 40);
+    let tx = Math.random() * (window.innerWidth - 40);
+    let ty = Math.random() * (window.innerHeight - 40);
+    const speed = 0.003;
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function moveStar() {
+      x = lerp(x, tx, speed);
+      y = lerp(y, ty, speed);
+      star.style.left = x + 'px';
+      star.style.top = y + 'px';
+
+      if (Math.abs(x - tx) < 1 && Math.abs(y - ty) < 1) {
+        tx = Math.random() * (window.innerWidth - 40);
+        ty = Math.random() * (window.innerHeight - 40);
+      }
+
+      requestAnimationFrame(moveStar);
+    }
+
+    moveStar();
+
+    // 窗口大小变化时重新限制边界
+    window.addEventListener('resize', () => {
+      tx = Math.min(tx, window.innerWidth - 40);
+      ty = Math.min(ty, window.innerHeight - 40);
+    });
+  </script>
+
+</body>
+</html>
